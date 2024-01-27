@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import datetime
+import math
 
 sljp_codes = ['CM0320', 'JC0341', 'JC0342', 'MR0361', 'MR0363', 'MR0369', 'TJ0303', 'TJ0306']
 sljp_prefix = '01RJ20'
@@ -131,18 +132,41 @@ def pluvio_query(filename: str, i_year=2012, f_year=2023) -> pd.DataFrame:
 #
 # AJUSTAR PARA UTILIZAR A MÉDIA DOS DIAS, MEDIANTE ANÁLISE EXPLORATÓRIA PRÉVIA
 #
-def merge_pluvio(base_df: pd.DataFrame, col: str, filename: str, i_year=2012, f_year=2023) -> pd.DataFrame:
+def merge_pluvio(base_df: pd.DataFrame, col: str, filename: str, mode: str,
+                  i_year=2012, f_year=2023, pattern_hour='00:00:00') -> pd.DataFrame:
     
     pluvio_df = pluvio_query(filename, i_year=i_year, f_year=f_year)
     new_df = base_df.copy()
     new_df['Data'] = new_df['Data'].astype('str')
+    new_df['Hora'] = new_df['Hora'].astype('str')
+    print(f'Checking for hours: {new_df["Hora"]}') # Debug
 
-    pluvio_df = pluvio_df[['Data', col]]
-    pluvio_df = pluvio_df.groupby('Data').max().reset_index()
-    pluvio_df['Data'] = pluvio_df['Data'].astype('str')
-    
-    new_df = new_df.merge(pluvio_df, how='left', on='Data')
-    new_df.rename(columns={'24h': 'Prec. max em 24h (mm)'}, inplace=True)
+    if mode == 'ignore_missing':
+        new_df = new_df[new_df.Hora != str(0)]
+        base_hours = new_df['Hora'].values.tolist()
+        print(f'Checking for dropped 0 values: {base_hours}') # Debug
+
+        # Generates reference hours for merging
+        ref_hours = [base_hour[:3] + str(15 * int(math.floor(int(base_hour[3:5]))/15)) + base_hour[5:]
+                      if (int(math.floor(int(base_hour[3:5]))/15)) != 0 else base_hour[:3] + '00' + base_hour[5:] 
+                      for base_hour in base_hours]
+        
+        new_df['Hora_pluvio'] = ref_hours
+        merge_on = ['Data', 'Hora_pluvio']
+        
+        
+        print(f'Checking pluvio_df: {pluvio_df.tail(10)}') # Debug
+
+    elif mode == 'patternized':
+        pluvio_df = pluvio_df[pluvio_df['Hora'] == pattern_hour]
+        new_df['Hora_pluvio'] = pluvio_df['Hora'].values.tolist()[:len(new_df['Data'].values.tolist())]
+        merge_on = ['Data', 'Hora_pluvio']
+
+    pluvio_df.rename(columns={'Hora': 'Hora_pluvio'}, inplace=True)
+    pluvio_df = pluvio_df[merge_on + [col]]
+    new_df = new_df.merge(pluvio_df, how='left', left_on=merge_on, right_on=merge_on)
+    new_df.rename(columns={col: f'Prec. max em {col} (mm)'}, inplace=True)
+    print(f'Checking for merged df: {new_df[["Data", "Hora_pluvio", "Prec. max em 24h (mm)", "DBO (mg/L)"]].tail(10)}')
 
 
     return new_df

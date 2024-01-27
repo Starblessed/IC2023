@@ -28,6 +28,13 @@ import data_fetching
 import utilities
 import data_paths
 
+# Removes row and column display limit for easier debugging
+pd.set_option('display.max_columns', None)
+# pd.set_option('display.max_rows', None)
+
+def interrupt(message='Interrupted by interrupt() function.'):
+    assert False, message
+
 
 def heatmap_compare(models: dict) -> None:
     model_names = ''
@@ -96,43 +103,55 @@ class ValidationMetrics:
             stdev = stt.stdev(model[f'hist_{self.metric}'])
             self.update(model=abv, max=_max,  min=_min, avg=avg, stdev=stdev)
 
-    def rank_by(self, stat='rank_score'):
+    def rank_by(self, stat='rank_score', save=False, n_iter=''):
         rank = sorted(self.models.items(), key= lambda x: x[1][stat], reverse=True)
+        if save:
+            generation_file = open(data_paths.GEN_PATH, mode='a')
+            generation_file.write(f'---- Model Stats and Ranking - Generation [add generation number here]\n--- Iterations: {n_iter}\n--- Date and Time: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}\nVariables: {features}\n')
         
         for i, model in enumerate(rank):
             print(f"#{i + 1} {model[1]['full_name']}")
+            if save:
+                generation_file.write(f"- #{i + 1} {model[1]['full_name']}\n")
             for _stat in model[1].keys():
                 if _stat != f'hist_{self.metric}':
+                    if save:
+                        generation_file.write(f'    {_stat}: {model[1][_stat]}\n')
                     print(f'    {_stat}: {model[1][_stat]}')
+        if save:
+            generation_file.write('\nNotes:\n')
+            generation_file.close()
 
-    def show_performance(self):
+    def show_performance(self, save=False, plot=True):
         labels = list(self.models.keys())
         iter_list = [x + 1 for x in range(len(self.models[labels[0]][f'hist_{self.metric}']))]
         fig, ax = plt.subplots(figsize=(8, 6))
         customization.color_plot(fig, ax, 'black', 'black')
         for i, model in enumerate(self.models.items()):
             print(model, labels, iter_list)
-            plt.plot(iter_list, model[1][f'hist_{self.metric}'], 'o-', label=labels[i])
-        plt.legend()
-        plt.grid(axis='x')
-        plt.ylabel(self.metric)
-        plt.xlabel('Iteration')
-        plt.title(f'Model performances over iterations for "{self.metric}"')
-        plt.show()
+            if plot:
+                plt.plot(iter_list, model[1][f'hist_{self.metric}'], 'o-', label=labels[i])
+        if plot:
+            plt.legend()
+            plt.grid(axis='x')
+            plt.ylabel(self.metric)
+            plt.xlabel('Iteration')
+            plt.title(f'Model performances over iterations for "{self.metric}"')
+            plt.show()
     
 
 # Changes matplotlib's font colors
-'''text_color = 'w'
+text_color = 'w'
 
 params = {"ytick.color" : text_color,
         "xtick.color" : text_color,
         "axes.labelcolor" : text_color,
         "axes.edgecolor" : text_color,
         "text.color": text_color}
-plt.rcParams.update(params)'''
+plt.rcParams.update(params)
 
 sampling_point = 'TJ0303' # Water sampling point
-time_range = [2013, 2023] # Data time range
+time_range = [2012, 2023] # Data time range
 
 inea_path = data_paths.WQ_PATH # Water quality data path
 pluvio_path = data_paths.PV_PATH # Pluviometric data path
@@ -156,13 +175,16 @@ df = data_fetching.join_duplicates(df, 'pH', ['pH', 'pH  '])
 df = data_fetching.join_duplicates(df, 'Coliformes Termotolerantes (NMP/100mL)', ['Coliformes Termotolerantes (NMP/100mL)',
                                                                                    'Coliformes Termotolerantes  (NMP/100mL)',
                                                                                    'Coliformes Termotolerantes (NMP/100 mL)'])
-df = data_fetching.merge_pluvio(df, '24h', pluvio_path)
+df = data_fetching.merge_pluvio(df, '24h', pluvio_path, 'patternized', pattern_hour='05:00:00')
 
 df.dropna(inplace=True)
 
 for var in (features):
+    if 'Prec.' in var:
+        continue
     df = data_fetching.remove_outliers(df, var)
-print(len(df))
+
+print(f'Number of rows after preprocessing: {len(df)}')
 
 df.sort_values(by='Data', inplace=True)
 
@@ -172,7 +194,7 @@ x = df[features].values
 y = df[model_var].astype('float32').values
 
 # Runs the models
-def protocol_md():
+def protocol_md(save=False, plot=True):
     # Models names and abberviations to initialize the ValidationMetrics() class instances
     model_abvs = ["bann", "dann", "rfr", "svr-l", "svr-p", "svr-rbf", "dtr"]
     model_names = ["Basic Neural Network", "Deep Neural Network", "Random Forest Regressor",
@@ -183,7 +205,7 @@ def protocol_md():
     mse_metrics = ValidationMetrics(model_abvs, model_names, 'mse', 0)
     f1_metrics = ValidationMetrics(model_abvs, model_names, 'f1', 1)
 
-    iter_length = 25 # Number of iterations
+    iter_length = 50 # Number of iterations
     scaling = True # Data scaling
 
     # Beginning of the train-test iterations
@@ -309,7 +331,7 @@ def protocol_md():
     mse_metrics.fill_stats()
     mse_metrics.show_performance()
     print("---- Final Ranking ----")
-    mse_metrics.rank_by()
+    mse_metrics.rank_by(save=save, n_iter=iter_length)
 
     '''# Sets bar plot
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -338,6 +360,7 @@ def protocol_ex():
     for i, feature in enumerate(axy):
         print(f'Plot {i + 1} - {feature}')
         color= 'b' if (i + 1) < len(axy) else 'r'
+        customization.color_plot(fig, ax[i], 'black', 'black')
         ax[i].plot(df[axx], df[feature].values, '-o', c=color)
         ax[i].set_xlabel(axx)
         ax[i].set_ylabel(feature)
@@ -377,4 +400,5 @@ def protocol_in():
         plt.show()
         plt.close()
 
-protocol_ex()
+protocol_md(save=True, plot=True)
+# protocol_ex()
