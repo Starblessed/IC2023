@@ -1,0 +1,144 @@
+0ª variável: Alcalinidade Total              (mg/L) 
+1ª variável: Alcalinidade Total (mg/L) 
+2ª variável: Alcalinidade total (mg/L) 
+3ª variável: Alumínio Dissolvido (mg/L) 
+4ª variável: Alumínio dissolvido (mg/L) 
+5ª variável: Alumínio total (mg/L) 
+6ª variável: Ano 
+7ª variável: Arsênio Total (mg/L) 
+8ª variável: Arsênio total (mg/L) 
+9ª variável: Chumbo Extraível (mg/L) 
+10ª variável: Chumbo Total (mg/L) 
+11ª variável: Chumbo total (mg/L) 
+12ª variável: Cianeto Livre (mg/L) 
+13ª variável: Cianeto livre (mg/L) 
+14ª variável: Cianeto livre (mg/L).1 
+15ª variável: Cianotoxina/Cilindrospermopsina (cél/L) 
+16ª variável: Cianotoxinas/Microcistinas (cél/L) 
+17ª variável: Cianotoxinas/Microcistinas (µg/L) 
+18ª variável: Cianotoxinas/Saxitoxinas (cél/L) 
+19ª variável: Cloreto (mg/L) 
+20ª variável: Cloro residual livre (mg/L) 
+21ª variável: Cobalto Total (mg/L) 
+22ª variável: Cobalto total (mg/L) 
+23ª variável: Cobre Dissolvido (mg/L) 
+24ª variável: Cobre Extraível (mg/L) 
+25ª variável: Cobre Total (mg/L) 
+26ª variável: Cobre dissolvido (mg/L) 
+27ª variável: Cobre total  (mg/L) 
+28ª variável: Cobre total (mg/L) 
+29ª variável: Coliformes Termotolerantes  (NMP/100mL) 
+30ª variável: Coliformes Termotolerantes (NMP/100 mL) 
+31ª variável: Coliformes Termotolerantes (NMP/100mL) 
+32ª variável: Condutividade (µS/cm) 
+33ª variável: Cor Aparente (UC) 
+34ª variável: Cor Verdadeira (UC) 
+35ª variável: Cor verdadeira (UC) 
+36ª variável: Cor verdadeira (UC)  
+37ª variável: Cromo Extraível (mg/L) 
+38ª variável: Cromo Total (mg/L) 
+39ª variável: Cromo total (mg/L) 
+40ª variável: Cádmio Extraível (mg/L) 
+41ª variável: Cádmio Total (mg/L) 
+42ª variável: Cádmio total (mg/L) 
+43ª variável: DBO (mg/L) 
+44ª variável: DQO (mg/L) 
+45ª variável: Data 
+46ª variável: Dia 
+47ª variável: Enterococos (NMP/100 mL) 
+48ª variável: Enterococos (NMP/100mL) 
+49ª variável: Escherichia coli (NMP/100 mL) 
+50ª variável: Escherichia coli (NMP/100mL) 
+51ª variável: Fenóis Totais (mg/L) 
+52ª variável: Fenóis totais (mg/L) 
+53ª variável: Fenóis totais (mg/L).1 
+54ª variável: Ferro Dissolvido (mg/L) 
+55ª variável: Ferro Extraível (mg/L) 
+56ª variável: Ferro dissolvido (mg/L) 
+57ª variável: Ferro total (mg/L) 
+58ª variável: Fósforo Total (mg/L) 
+59ª variável: Hora 
+60ª variável: LD 
+61ª variável: LD.1 
+62ª variável: LD.10 
+63ª variável: LD.11 
+64ª variável: LD.12 
+65ª variável: LD.13 
+66ª variável: LD.14 
+67ª variável: LD.15 
+68ª variável: LD.16 
+69ª variável: LD.17 
+70ª variável: LD.18 
+71ª variável: LD.19 
+72ª variável: LD.2 
+73ª variável: LD.20 
+74ª variável: LD.21 
+75ª variável: LD.22 
+76ª variável: LD.23 
+77ª variável: LD.24 
+78ª variável: LD.25 
+79ª variável: LD.26 
+80ª variável: LD.27 
+81ª variável: LD.28 
+82ª variável: LD.29 
+83ª variável: LD.3 
+84ª variável: LD.30 
+85ª variável: LD.31 
+86ª variável: LD.32 
+87ª variável: LD.33 
+88ª variável: LD.34 
+89ª variável: LD.35 
+90ª variável: LD.36 
+91ª variável: LD.37 
+92ª variável: LD.38 
+93ª variável: LD.39 
+94ª variável: LD.4 
+95ª variável: LD.40 
+96ª variável: LD.41 
+97ª variável: LD.42 
+98ª variável: LD.5 
+99ª variável: LD.6 
+100ª variável: LD.7 
+101ª variável: LD.8 
+102ª variável: LD.9 
+103ª variável: Local 
+104ª variável: Manganês Total (mg/L) 
+105ª variável: Manganês total (mg/L) 
+106ª variável: Mercúrio Total (mg/L) 
+107ª variável: Mercúrio total (mg/L) 
+108ª variável: Mês 
+109ª variável: Nitrato (mg/L) 
+110ª variável: Nitrito (mg/L) 
+111ª variável: Nitrogênio Amoniacal Total (mg/L) 
+112ª variável: Nitrogênio Kjeldahl (mg/L) 
+113ª variável: Nitrogênio amoniacal total (mg/L) 
+114ª variável: Níquel Extraível (mg/L) 
+115ª variável: Níquel Total (mg/L) 
+116ª variável: Níquel total  (mg/L) 
+117ª variável: Níquel total (mg/L) 
+118ª variável: OD  (mg/L) 
+119ª variável: OD (mg/L ) 
+120ª variável: OD (mg/L) 
+121ª variável: Orto-fosfato Dissolvido (mg/L) 
+122ª variável: Orto-fosfato dissolvido (mg/L) 
+123ª variável: Ortofosfato dissolvido (mg/L) 
+124ª variável: Salinidade (‰) 
+125ª variável: Substâncias tensoativas que reagem ao azul de metileno (mg/L) 
+126ª variável: Sólidos Dissolvidos Totais (mg/L) 
+127ª variável: Sólidos Suspensos Totais (mg/L) 
+128ª variável: Sólidos Totais (mg/L) 
+129ª variável: Sólidos dissolvidos totais (mg/L) 
+130ª variável: Sólidos suspensos totais (mg/L) 
+131ª variável: Sólidos totais (mg/L) 
+132ª variável: Temperatura da Água (°C) 
+133ª variável: Temperatura do Ar (°C) 
+134ª variável: Transparência (m) 
+135ª variável: Turbidez (UNT) 
+136ª variável: Turbidez (uT) 
+137ª variável: Vanádio total (mg/L) 
+138ª variável: Zinco Extraível (mg/L) 
+139ª variável: Zinco Total (mg/L) 
+140ª variável: Zinco total (mg/L) 
+141ª variável: pH 
+142ª variável: pH   
+143ª variável: selector 
