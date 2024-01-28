@@ -159,7 +159,7 @@ pluvio_path = data_paths.PV_PATH # Pluviometric data path
 # Label - Variable to predict
 model_var = 'DBO (mg/L)'
 # Features - Variables to use as predictors
-features = ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Prec. max em 24h (mm)']
+features = ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Prec. max em 96h (mm)']
 # Variables to fecth from the Water Quality dataset
 fetch_vars = [model_var, 'pH', 'pH  ', 'Coliformes Termotolerantes (NMP/100mL)',
              'Coliformes Termotolerantes  (NMP/100mL)', 'Coliformes Termotolerantes (NMP/100 mL)',
@@ -175,7 +175,7 @@ df = data_fetching.join_duplicates(df, 'pH', ['pH', 'pH  '])
 df = data_fetching.join_duplicates(df, 'Coliformes Termotolerantes (NMP/100mL)', ['Coliformes Termotolerantes (NMP/100mL)',
                                                                                    'Coliformes Termotolerantes  (NMP/100mL)',
                                                                                    'Coliformes Termotolerantes (NMP/100 mL)'])
-df = data_fetching.merge_pluvio(df, '24h', pluvio_path, 'patternized', pattern_hour='05:00:00')
+df = data_fetching.merge_pluvio(df, '96h', pluvio_path, 'ignore_missing', pattern_hour='23:45:00', days_past=0)
 
 df.dropna(inplace=True)
 
