@@ -20,4 +20,5 @@
 ## 0.1.5 (28/01/2024 - Pendente)
 
 - Adicionar opção de salvar os melhores modelos de cada geração de treinamento;
-- Unir hiperparâmetros importantes em uma classe, função ou dicionário.
+- Unir hiperparâmetros importantes em uma classe, função ou dicionário;
+- Adicionar protocolo de otimização para um único modelo.

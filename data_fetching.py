@@ -80,24 +80,29 @@ def join_duplicates(dataframe: pd.DataFrame, var: str, join_list: list) -> pd.Da
     return frame
 
 
-def remove_outliers(base_df: pd.DataFrame, var: str):
-    new_df = base_df.copy()
-    new_df.sort_values(var, axis=0, inplace=True)
-    rol = new_df[var].values
+def remove_outliers(base_df: pd.DataFrame, var: str, group_column='Local'):
+    group_ids = base_df[group_column].unique()
+    result_df = pd.DataFrame(columns=base_df.columns.values.tolist())
+    for group_id in group_ids:
+        new_df = base_df.copy()
+        new_df = new_df[new_df[group_column] == group_id]
+        new_df.sort_values(var, axis=0, inplace=True)
+        rol = new_df[var].values
 
-    quartile_1 = np.percentile(rol, 25)
-    quartile_3 = np.percentile(rol, 75)
+        quartile_1 = np.percentile(rol, 25)
+        quartile_3 = np.percentile(rol, 75)
 
-    IQR = quartile_3 - quartile_1
-    w_min = quartile_1 - 1.5 * IQR
-    w_max = quartile_3 + 1.5 * IQR
+        IQR = quartile_3 - quartile_1
+        w_min = quartile_1 - 1.5 * IQR
+        w_max = quartile_3 + 1.5 * IQR
 
-    to_drop = [0 if (w_min <= value <= w_max) else 1 for value in rol] 
-    new_df['drop'] = to_drop
-    drop_ones = new_df[(new_df['drop'] == 1)].index
-    new_df.drop(drop_ones, axis=0, inplace=True)
-    new_df.drop(['drop'], axis=1, inplace=True)
-    return new_df
+        to_drop = [0 if (w_min <= value <= w_max) else 1 for value in rol]
+        new_df['drop'] = to_drop
+        drop_ones = new_df[(new_df['drop'] == 1)].index
+        new_df.drop(drop_ones, axis=0, inplace=True)
+        new_df.drop(['drop'], axis=1, inplace=True)
+        result_df = pd.concat([result_df, new_df], ignore_index=True)
+    return result_df
 
 
 def date_sort(base_df: pd.DataFrame) -> pd.DataFrame:
@@ -133,20 +138,22 @@ def pluvio_query(filename: str, i_year=2012, f_year=2023) -> pd.DataFrame:
 # AJUSTAR PARA UTILIZAR A MÉDIA DOS DIAS, MEDIANTE ANÁLISE EXPLORATÓRIA PRÉVIA
 #
 def merge_pluvio(base_df: pd.DataFrame, col: str, filename: str, mode: str,
-                  i_year=2012, f_year=2023, pattern_hour='00:00:00', days_past=0) -> pd.DataFrame:
+                  i_year=2012, f_year=2023, pattern_hour='00:00:00', days_past=0, debug=False) -> pd.DataFrame:
     
     pluvio_df = pluvio_query(filename, i_year=i_year, f_year=f_year)
     new_df = base_df.copy()
     new_df['Data'] = new_df['Data'].astype('str')
     new_df['Hora'] = new_df['Hora'].astype('str')
-    print(f'Checking for hours: {new_df["Hora"]}') # Debug
+    if debug:
+        print(f'Checking for hours: {new_df["Hora"]}') # Debug
 
     # Merges the pluviometric data using the closest previous time to the water quality dataset samples.
     # Obs.: Deletes rows with missing sampling times on the water quality dataset.
     if mode == 'ignore_missing':
         new_df = new_df[new_df.Hora != str(0)]
         base_hours = new_df['Hora'].values.tolist()
-        print(f'Checking for dropped 0 values: {base_hours}') # Debug
+        if debug:
+            print(f'Checking for dropped 0 values: {base_hours}') # Debug
 
         # Generates reference hours for merging
         ref_hours = [base_hour[:3] + str(15 * int(math.floor(int(base_hour[3:5]))/15)) + base_hour[5:]
@@ -156,8 +163,8 @@ def merge_pluvio(base_df: pd.DataFrame, col: str, filename: str, mode: str,
         new_df['Hora_pluvio'] = ref_hours
         right_on = left_on = ['Data', 'Hora_pluvio']
         
-        
-        print(f'Checking pluvio_df: {pluvio_df.tail(10)}') # Debug
+        if debug:
+            print(f'Checking pluvio_df: {pluvio_df.tail(10)}') # Debug
 
     # Merges the pluviometric data based on specified times and days past the water quality sampling
     elif mode == 'patternized':
@@ -187,7 +194,8 @@ def merge_pluvio(base_df: pd.DataFrame, col: str, filename: str, mode: str,
         new_df.rename(columns={'Data_pluvio': 'Data'}, inplace=True)
     except:
         pass
-    print(f'Checking for merged df: {new_df[["Data", "Hora_pluvio", f"Prec. max em {col} (mm)", "DBO (mg/L)"]].tail(10)}')
+    if debug:
+        print(f'Checking for merged df: {new_df[["Data", "Hora_pluvio", f"Prec. max em {col} (mm)", "DBO (mg/L)"]].tail(10)}')
 
 
     return new_df

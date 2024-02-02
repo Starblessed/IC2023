@@ -221,7 +221,7 @@ Notes:
 ---- Model Stats and Ranking - Generation [add generation number here]
 --- Iterations: 50
 --- Date and Time: 28/01/2024 00:50:13
-Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Prec. max em 96h (mm)']
+Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da ï¿½gua (ï¿½C)', 'Prec. max em 96h (mm)']
 - #1 Deep Neural Network
     full_name: Deep Neural Network
     rank_score: 18
@@ -271,5 +271,390 @@ Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água
     min_mse: 15.609330177307129
     avg_mse: 81.9683883857727
     stdev_mse: 47.34119253913141
+
+Notes:
+---- Model Stats and Ranking - Generation 0.2
+--- Iterations: 100
+--- Date and Time: 28/01/2024 05:03:15
+Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da ï¿½gua (ï¿½C)', 'Prec. max em 24h (mm)']
+- #1 Deep Neural Network
+    full_name: Deep Neural Network
+    rank_score: 26
+    max_mse: 125.81231689453125
+    min_mse: 7.336820125579834
+    avg_mse: 33.962997794151306
+    stdev_mse: 19.853819978028028
+- #2 Support Vector Regressor - Poly
+    full_name: Support Vector Regressor - Poly
+    rank_score: 24
+    max_mse: 89.63051064374856
+    min_mse: 1.780316231545026
+    avg_mse: 29.232921789804184
+    stdev_mse: 19.82315578468957
+- #3 Decision Tree Regressor
+    full_name: Decision Tree Regressor
+    rank_score: 18
+    max_mse: 109.89026211615437
+    min_mse: 0.9617543854511427
+    avg_mse: 33.040932756212634
+    stdev_mse: 24.541914610966657
+- #4 Support Vector Regressor - Linear
+    full_name: Support Vector Regressor - Linear
+    rank_score: 15
+    max_mse: 84.37335297064372
+    min_mse: 1.9354879726092882
+    avg_mse: 38.24049225670937
+    stdev_mse: 16.57327380179636
+- #5 Support Vector Regressor - RBF
+    full_name: Support Vector Regressor - RBF
+    rank_score: 8
+    max_mse: 170.76323336472421
+    min_mse: 3.1612228135842013
+    avg_mse: 49.853407073696246
+    stdev_mse: 34.194450169008505
+- #6 Random Forest Regressor
+    full_name: Random Forest Regressor
+    rank_score: 6
+    max_mse: 197.20833333333334
+    min_mse: 5.022962671915706
+    avg_mse: 79.13213117994027
+    stdev_mse: 36.83397150824949
+- #7 Basic Neural Network
+    full_name: Basic Neural Network
+    rank_score: 3
+    max_mse: 215.7066650390625
+    min_mse: 3.729344367980957
+    avg_mse: 62.6797429227829
+    stdev_mse: 39.03141494477109
+
+Notes:
+---- Model Stats and Ranking - Generation [add generation number here]
+--- Iterations: 100
+--- Date and Time: 28/01/2024 22:36:05
+Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Fósforo Total (mg/L)', 'Prec. max em 24h (mm)']
+- #1 Decision Tree Regressor
+    full_name: Decision Tree Regressor
+    rank_score: 27
+    max_mse: 65.8369539743108
+    min_mse: 3.138462950704842
+    avg_mse: 23.438953814702206
+    stdev_mse: 14.071419650566604
+- #2 Support Vector Regressor - Linear
+    full_name: Support Vector Regressor - Linear
+    rank_score: 23
+    max_mse: 75.37180138322317
+    min_mse: 2.0070600852215077
+    avg_mse: 24.013354500867457
+    stdev_mse: 13.943071770315322
+- #3 Support Vector Regressor - RBF
+    full_name: Support Vector Regressor - RBF
+    rank_score: 15
+    max_mse: 116.03775717118697
+    min_mse: 3.806240953586951
+    avg_mse: 29.913245169493663
+    stdev_mse: 21.116786232214263
+- #4 Random Forest Regressor
+    full_name: Random Forest Regressor
+    rank_score: 13
+    max_mse: 98.82666655222575
+    min_mse: 1.9762963167826395
+    avg_mse: 33.3885311747975
+    stdev_mse: 19.75171566610637
+- #5 Support Vector Regressor - Poly
+    full_name: Support Vector Regressor - Poly
+    rank_score: 12
+    max_mse: 64.167004369119
+    min_mse: 3.5489626346675998
+    avg_mse: 22.88842945335028
+    stdev_mse: 13.464836021004102
+- #6 Deep Neural Network
+    full_name: Deep Neural Network
+    rank_score: 10
+    max_mse: 69.27774047851562
+    min_mse: 2.964449167251587
+    avg_mse: 24.78289167881012
+    stdev_mse: 15.036734589539906
+- #7 Basic Neural Network
+    full_name: Basic Neural Network
+    rank_score: 0
+    max_mse: 192.8411865234375
+    min_mse: 19.94207191467285
+    avg_mse: 76.6834033203125
+    stdev_mse: 33.842886464147135
+
+Notes:
+---- Model Stats and Ranking - Generation [add generation number here]
+--- Iterations: 100
+--- Date and Time: 28/01/2024 23:19:47
+Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Fósforo Total (mg/L)', 'Prec. max em 24h (mm)']
+- #1 Decision Tree Regressor
+    full_name: Decision Tree Regressor
+    rank_score: 24
+    max_mse: 75.30206215802721
+    min_mse: 1.5109594039658214
+    avg_mse: 22.938518746821
+    stdev_mse: 15.753120902603703
+- #2 Support Vector Regressor - Linear
+    full_name: Support Vector Regressor - Linear
+    rank_score: 19
+    max_mse: 59.089189308945414
+    min_mse: 2.346866882305291
+    avg_mse: 22.69290995712167
+    stdev_mse: 12.462754819492458
+- #3 Support Vector Regressor - Poly
+    full_name: Support Vector Regressor - Poly
+    rank_score: 19
+    max_mse: 55.15772030542738
+    min_mse: 1.635193749934243
+    avg_mse: 20.18750002522071
+    stdev_mse: 12.445210245745564
+- #4 Random Forest Regressor
+    full_name: Random Forest Regressor
+    rank_score: 18
+    max_mse: 82.813330722385
+    min_mse: 1.1303703795539006
+    avg_mse: 30.02597735665818
+    stdev_mse: 18.684910122306817
+- #5 Deep Neural Network
+    full_name: Deep Neural Network
+    rank_score: 11
+    max_mse: 60.1394157409668
+    min_mse: 4.497264385223389
+    avg_mse: 21.056404299736023
+    stdev_mse: 10.70439401237343
+- #6 Support Vector Regressor - RBF
+    full_name: Support Vector Regressor - RBF
+    rank_score: 9
+    max_mse: 106.40968830813573
+    min_mse: 1.0646589790008931
+    avg_mse: 31.517321208677416
+    stdev_mse: 23.05689425805625
+- #7 Basic Neural Network
+    full_name: Basic Neural Network
+    rank_score: 0
+    max_mse: 178.76904296875
+    min_mse: 15.647303581237793
+    avg_mse: 74.46553000450135
+    stdev_mse: 36.98264438673105
+
+Notes:
+---- Model Stats and Ranking - Generation [add generation number here]
+--- Iterations: 100
+--- Date and Time: 29/01/2024 00:15:55
+Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Fósforo Total (mg/L)', 'Prec. max em 24h (mm)', 'OD (mg/L)']
+- #1 Decision Tree Regressor
+    full_name: Decision Tree Regressor
+    rank_score: 26
+    max_mse: 76.4490555950784
+    min_mse: 2.391496214632303
+    avg_mse: 24.459432383250686
+    stdev_mse: 17.235601422469557
+- #2 Support Vector Regressor - Linear
+    full_name: Support Vector Regressor - Linear
+    rank_score: 21
+    max_mse: 57.565222855136575
+    min_mse: 3.145515944032626
+    avg_mse: 23.29291296327948
+    stdev_mse: 12.349200292375865
+- #3 Support Vector Regressor - RBF
+    full_name: Support Vector Regressor - RBF
+    rank_score: 17
+    max_mse: 92.73031648383818
+    min_mse: 2.2948996213653907
+    avg_mse: 30.210143084291015
+    stdev_mse: 20.67596768281881
+- #4 Deep Neural Network
+    full_name: Deep Neural Network
+    rank_score: 13
+    max_mse: 70.69673919677734
+    min_mse: 3.1571409702301025
+    avg_mse: 24.55541085243225
+    stdev_mse: 16.002352419885586
+- #5 Random Forest Regressor
+    full_name: Random Forest Regressor
+    rank_score: 12
+    max_mse: 82.44740726047092
+    min_mse: 3.7083333333333335
+    avg_mse: 33.46852390002235
+    stdev_mse: 19.17435274114228
+- #6 Support Vector Regressor - Poly
+    full_name: Support Vector Regressor - Poly
+    rank_score: 11
+    max_mse: 80.20505034609117
+    min_mse: 1.1803620521538754
+    avg_mse: 24.199024572311394
+    stdev_mse: 16.740355786747863
+- #7 Basic Neural Network
+    full_name: Basic Neural Network
+    rank_score: 0
+    max_mse: 186.5042266845703
+    min_mse: 12.073935508728027
+    avg_mse: 76.16329154014588
+    stdev_mse: 40.182720653691675
+
+Notes:
+---- Model Stats and Ranking - Generation [add generation number here]
+--- Iterations: 100
+--- Date and Time: 29/01/2024 01:40:09
+Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Fósforo Total (mg/L)', 'Prec. max em 24h (mm)', 'OD (mg/L)']
+- #1 Decision Tree Regressor
+    full_name: Decision Tree Regressor
+    rank_score: 40
+    max_mse: 59.233344097981025
+    min_mse: 2.6410836846749706
+    avg_mse: 20.101623772611653
+    stdev_mse: 13.020402826344514
+- #2 Support Vector Regressor - Poly
+    full_name: Support Vector Regressor - Poly
+    rank_score: 23
+    max_mse: 44.45495909092069
+    min_mse: 2.7159726258115016
+    avg_mse: 18.75020850709158
+    stdev_mse: 9.796364728194108
+- #3 Support Vector Regressor - Linear
+    full_name: Support Vector Regressor - Linear
+    rank_score: 12
+    max_mse: 108.94499956907937
+    min_mse: 4.857983390920951
+    avg_mse: 32.786995804022574
+    stdev_mse: 19.739702211489043
+- #4 Deep Neural Network
+    full_name: Deep Neural Network
+    rank_score: 9
+    max_mse: 85.20066833496094
+    min_mse: 3.4387528896331787
+    avg_mse: 27.872191932201385
+    stdev_mse: 17.035765544243368
+- #5 Random Forest Regressor
+    full_name: Random Forest Regressor
+    rank_score: 9
+    max_mse: 164.02833318392436
+    min_mse: 4.637222075285739
+    avg_mse: 50.14520852835047
+    stdev_mse: 32.86940825476308
+- #6 Support Vector Regressor - RBF
+    full_name: Support Vector Regressor - RBF
+    rank_score: 6
+    max_mse: 142.31152338553204
+    min_mse: 3.4717964895239555
+    avg_mse: 45.65380336820466
+    stdev_mse: 30.766908538120678
+- #7 Basic Neural Network
+    full_name: Basic Neural Network
+    rank_score: 1
+    max_mse: 169.14463806152344
+    min_mse: 11.006207466125488
+    avg_mse: 72.47996708869934
+    stdev_mse: 37.08022168194859
+
+Notes:
+---- Model Stats and Ranking - Generation [add generation number here]
+--- Iterations: 50
+--- Date and Time: 29/01/2024 02:00:39
+Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Fósforo Total (mg/L)', 'Prec. max em 24h (mm)', 'OD (mg/L)']
+- #1 Support Vector Regressor - Poly
+    full_name: Support Vector Regressor - Poly
+    rank_score: 14
+    max_mse: 47.27606758360964
+    min_mse: 3.558737798958514
+    avg_mse: 18.10870057182777
+    stdev_mse: 11.413845468759352
+- #2 Decision Tree Regressor
+    full_name: Decision Tree Regressor
+    rank_score: 14
+    max_mse: 60.64654420911051
+    min_mse: 3.5928007449969726
+    avg_mse: 20.707927186815645
+    stdev_mse: 13.401031530224477
+- #3 Deep Neural Network
+    full_name: Deep Neural Network
+    rank_score: 6
+    max_mse: 93.1881103515625
+    min_mse: 1.5395609140396118
+    avg_mse: 25.46280860185623
+    stdev_mse: 18.0933363665476
+- #4 Random Forest Regressor
+    full_name: Random Forest Regressor
+    rank_score: 6
+    max_mse: 125.45629567322908
+    min_mse: 5.882407499242714
+    avg_mse: 40.12142942256487
+    stdev_mse: 29.397931965994232
+- #5 Support Vector Regressor - Linear
+    full_name: Support Vector Regressor - Linear
+    rank_score: 6
+    max_mse: 76.62975065438232
+    min_mse: 5.193329987113055
+    avg_mse: 28.847505946284123
+    stdev_mse: 18.985998745512536
+- #6 Support Vector Regressor - RBF
+    full_name: Support Vector Regressor - RBF
+    rank_score: 4
+    max_mse: 142.8463744023674
+    min_mse: 4.842682252211264
+    avg_mse: 45.0299580041954
+    stdev_mse: 32.11278626484937
+- #7 Basic Neural Network
+    full_name: Basic Neural Network
+    rank_score: 0
+    max_mse: 158.45616149902344
+    min_mse: 24.294601440429688
+    avg_mse: 73.40616641998291
+    stdev_mse: 34.19569272001261
+
+Notes:
+---- Model Stats and Ranking - Generation [add generation number here]
+--- Iterations: 50
+--- Date and Time: 29/01/2024 02:11:46
+Variables: ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Fósforo Total (mg/L)', 'Prec. max em 96h (mm)', 'OD (mg/L)']
+- #1 Decision Tree Regressor
+    full_name: Decision Tree Regressor
+    rank_score: 24
+    max_mse: 71.37732349191714
+    min_mse: 2.8552200975231954
+    avg_mse: 22.026596752631324
+    stdev_mse: 16.514199048780927
+- #2 Support Vector Regressor - Poly
+    full_name: Support Vector Regressor - Poly
+    rank_score: 11
+    max_mse: 54.456990865123686
+    min_mse: 5.569784372428104
+    avg_mse: 20.60849187509077
+    stdev_mse: 10.882253366252463
+- #3 Deep Neural Network
+    full_name: Deep Neural Network
+    rank_score: 9
+    max_mse: 103.78240966796875
+    min_mse: 7.564052581787109
+    avg_mse: 30.55027413368225
+    stdev_mse: 17.865722895535075
+- #4 Support Vector Regressor - Linear
+    full_name: Support Vector Regressor - Linear
+    rank_score: 3
+    max_mse: 102.06730009162955
+    min_mse: 4.0844270643902325
+    avg_mse: 32.84529544028708
+    stdev_mse: 17.91206373508284
+- #5 Random Forest Regressor
+    full_name: Random Forest Regressor
+    rank_score: 2
+    max_mse: 126.95629574740376
+    min_mse: 7.3451856429488815
+    avg_mse: 52.478451450850805
+    stdev_mse: 31.249219809120238
+- #6 Support Vector Regressor - RBF
+    full_name: Support Vector Regressor - RBF
+    rank_score: 1
+    max_mse: 486.46837949995523
+    min_mse: 7.730644920457234
+    avg_mse: 94.14617687669671
+    stdev_mse: 96.11575140519807
+- #7 Basic Neural Network
+    full_name: Basic Neural Network
+    rank_score: 0
+    max_mse: 183.28977966308594
+    min_mse: 14.284832000732422
+    avg_mse: 76.8993307876587
+    stdev_mse: 43.81135040264658
 
 Notes:

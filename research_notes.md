@@ -1,0 +1,3 @@
+## Transcrição de Textos Científicos
+### 28/01/2024
+- Uma pesquisa de [**Batsania *et. al* (2018)**](https://doi.org/10.1007/s10661-018-6679-2) tratou da elaboração de um modelo preditivo para qualidade da água. Todavia, a pesquisa realizada teve 5 objetivos distintos, porém inter-relacionados. Esta abordagem permite que uma pesquisa possua maiores recursos, uma vez que mais objetivos tendem a mais resultados. Dessa forma, além da simples elaboração de um modelo preditivo, uma análise aprofundada nos padrões espaço-temporais dos parâmetros monitorados pelo INEA certamente enriquecerá a pesquisa.

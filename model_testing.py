@@ -9,6 +9,8 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from tensorflow import keras
 
+import cv2
+
 import math
 import numpy as np
 import pandas as pd
@@ -25,6 +27,7 @@ import re
 
 import customization
 import data_fetching
+import hyperparameter_optimization as HPO
 import utilities
 import data_paths
 
@@ -114,10 +117,10 @@ class ValidationMetrics:
             if save:
                 generation_file.write(f"- #{i + 1} {model[1]['full_name']}\n")
             for _stat in model[1].keys():
-                if _stat != f'hist_{self.metric}':
+                if _stat not in [f'hist_{self.metric}', 'full_name']:
                     if save:
-                        generation_file.write(f'    {_stat}: {model[1][_stat]}\n')
-                    print(f'    {_stat}: {model[1][_stat]}')
+                        generation_file.write(f'    {_stat}: {round(model[1][_stat], 4)}\n')
+                    print(f'    {_stat}: {round(model[1][_stat], 4)}')
         if save:
             generation_file.write('\nNotes:\n')
             generation_file.close()
@@ -125,13 +128,14 @@ class ValidationMetrics:
     def show_performance(self, save=False, plot=True):
         labels = list(self.models.keys())
         iter_list = [x + 1 for x in range(len(self.models[labels[0]][f'hist_{self.metric}']))]
-        fig, ax = plt.subplots(figsize=(8, 6))
-        customization.color_plot(fig, ax, 'black', 'black')
-        for i, model in enumerate(self.models.items()):
-            print(model, labels, iter_list)
-            if plot:
-                plt.plot(iter_list, model[1][f'hist_{self.metric}'], 'o-', label=labels[i])
+        
         if plot:
+            fig, ax = plt.subplots(figsize=(8, 6))
+            customization.color_plot(fig, ax, 'black', 'black')
+
+            for i, model in enumerate(self.models.items()):
+                plt.plot(iter_list, model[1][f'hist_{self.metric}'], 'o-', label=labels[i])
+
             plt.legend()
             plt.grid(axis='x')
             plt.ylabel(self.metric)
@@ -141,57 +145,100 @@ class ValidationMetrics:
     
 
 # Changes matplotlib's font colors
-text_color = 'w'
+'''text_color = 'w'
 
 params = {"ytick.color" : text_color,
         "xtick.color" : text_color,
         "axes.labelcolor" : text_color,
         "axes.edgecolor" : text_color,
         "text.color": text_color}
-plt.rcParams.update(params)
+plt.rcParams.update(params)'''
 
+# Spatio-temporal information
 sampling_point = 'TJ0303' # Water sampling point
 time_range = [2012, 2023] # Data time range
 
+# PATHS
 inea_path = data_paths.WQ_PATH # Water quality data path
 pluvio_path = data_paths.PV_PATH # Pluviometric data path
+
+
+# HYPERPARAMETERS
+iter_length = 5 # Number of model train-test iterations
+scaling = True # Data scaling
+tts_test_size = 0.1 # Train-Test-Split percentual for the testing data
+
+pluvio_interval = '96h' # How many hours of precipitation before sampling to consider: 01h, 04h, 24h or 96h
+
+ann_epochs = [30, 90] # How many epochs to train the ann-based models [Basic, Deep]
+ann_batch_size = 2 # How many data points per batch to use during training
+ann_validation_split = 0.15 # Percentual of training data to use for validation
+
+rfr_estimators = 64 # Number of estimatores for Random Forest based models
+
+pluvio_merge_mode = 'patternized' # How to select date and time for pluviometric data before merging
+pluvio_hour = '05:00:00' # What hour to use as reference for merging the datasets
+pluvio_days_past = 0 # How many days before the water quality sampling to use the pluviometric data from
+
+outlier_stripping = ['pH', 'Coliformes Termotolerantes (NMP/100mL)',
+                    'Temperatura da Água (°C)'] # Variables to check and remove outliers from
+
 
 # Label - Variable to predict
 model_var = 'DBO (mg/L)'
 # Features - Variables to use as predictors
-features = ['pH', 'Coliformes Termotolerantes (NMP/100mL)', 'Temperatura da Água (°C)', 'Prec. max em 96h (mm)']
+features = ['pH', 'Coliformes Termotolerantes (NMP/100mL)',
+            'Temperatura da Água (°C)', 'Fósforo Total (mg/L)', f'Prec. max em {pluvio_interval} (mm)',
+            'OD (mg/L)']
 # Variables to fecth from the Water Quality dataset
 fetch_vars = [model_var, 'pH', 'pH  ', 'Coliformes Termotolerantes (NMP/100mL)',
              'Coliformes Termotolerantes  (NMP/100mL)', 'Coliformes Termotolerantes (NMP/100 mL)',
-             'Temperatura da Água (°C)']
+             'Temperatura da Água (°C)', 'Fósforo Total (mg/L)',
+             'OD (mg/L)', 'OD (mg/L )', 'OD  (mg/L)']
 
-# Fetches the data from the Water Quality dataset and inserts it into a dataframe.
-df = data_fetching.fetch_data(inea_path, ['Data', 'Hora'] + fetch_vars, codes=[sampling_point],
-                               i_year=time_range[0], f_year=time_range[1])
 
-# Preprocesses the data, merging duplicate columns, combining with the Pluvio dataset,
-# removing outliers, NaNs and sorting by Date
-df = data_fetching.join_duplicates(df, 'pH', ['pH', 'pH  '])
-df = data_fetching.join_duplicates(df, 'Coliformes Termotolerantes (NMP/100mL)', ['Coliformes Termotolerantes (NMP/100mL)',
-                                                                                   'Coliformes Termotolerantes  (NMP/100mL)',
-                                                                                   'Coliformes Termotolerantes (NMP/100 mL)'])
-df = data_fetching.merge_pluvio(df, '96h', pluvio_path, 'ignore_missing', pattern_hour='23:45:00', days_past=0)
+def protocol_gd(save_data=False):
+    # Fetches the data from the Water Quality dataset and inserts it into a dataframe.
+    df = data_fetching.fetch_data(inea_path, ['Data', 'Hora'] + fetch_vars, codes=[sampling_point],
+                                i_year=time_range[0], f_year=time_range[1])
 
-df.dropna(inplace=True)
+    # Merges duplicate columns from the water quality dataset
+    df = data_fetching.join_duplicates(df, 'OD (mg/L)', ['OD (mg/L)', 'OD (mg/L )', 'OD  (mg/L)'])
+    df = data_fetching.join_duplicates(df, 'pH', ['pH', 'pH  '])
+    df = data_fetching.join_duplicates(df, 'Coliformes Termotolerantes (NMP/100mL)', ['Coliformes Termotolerantes (NMP/100mL)',
+                                                                                    'Coliformes Termotolerantes  (NMP/100mL)',
+                                                                                    'Coliformes Termotolerantes (NMP/100 mL)'])
 
-for var in (features):
-    if 'Prec.' in var:
-        continue
-    df = data_fetching.remove_outliers(df, var)
+    # Merges the pluviometric dataset with the water quality dataset.
+    df = data_fetching.merge_pluvio(df, pluvio_interval, pluvio_path, mode=pluvio_merge_mode,
+                                    pattern_hour=pluvio_hour, days_past=pluvio_days_past)
 
-print(f'Number of rows after preprocessing: {len(df)}')
+    # Drops NaN values
+    df.dropna(inplace=True)
+    # Drops duplicated samples
+    df.drop_duplicates(subset='Data', keep="last", inplace=True)
 
-df.sort_values(by='Data', inplace=True)
+    # Removes outliers from the dataset on the variables inside the "outlier_stripping" list
+    for var in (features):
+        if var in outlier_stripping:
+            df = data_fetching.remove_outliers(df, var)
 
-# Separates the features and labels in two lists: x and y, respectively
+    # Saves the DataFrame into a .csv file
+    if save_data:
+        df.to_csv(data_paths.DF_PATH + rf'\{sampling_point}_{time_range[0]}_{time_range[1]}.csv',
+                sep=';', decimal=',', float_format='%.4f')
 
-x = df[features].values
-y = df[model_var].astype('float32').values
+    print(f'Number of rows after preprocessing: {len(df)}')
+
+    # Sorts the values by Date
+    df.sort_values(by='Data', inplace=True)
+
+    # Separates the features and labels in two lists: x and y, respectively
+    x = df[features].values
+    y = df[model_var].astype('float32').values
+
+    return df, x, y
+
 
 # Runs the models
 def protocol_md(save=False, plot=True):
@@ -205,14 +252,11 @@ def protocol_md(save=False, plot=True):
     mse_metrics = ValidationMetrics(model_abvs, model_names, 'mse', 0)
     f1_metrics = ValidationMetrics(model_abvs, model_names, 'f1', 1)
 
-    iter_length = 50 # Number of iterations
-    scaling = True # Data scaling
-
     # Beginning of the train-test iterations
     for i in range(iter_length):
 
         iter_res = []
-        print(f'Iteration n.{i + 1}')
+        print(f'_____ Iteration n.{i + 1} _____')
 
         x_train, x_test, y_train, y_test = tts(x, y, test_size=0.1)
         print('TTS Done.')
@@ -230,8 +274,9 @@ def protocol_md(save=False, plot=True):
         # Models
         # Basic Neural Network
         ann_basic = ann.basic((len(x_train[0]),))
-        ann_basic.fit(x_train, y_train, validation_split=0.1, epochs=30, batch_size=2, verbose=0)
-        ann_basic.save(data_paths.MS_PATH + r'\ann_basic.h5')
+        ann_basic.fit(x_train, y_train, validation_split=ann_validation_split, epochs=ann_epochs[0],
+                      batch_size=ann_batch_size, verbose=0)
+        # ann_basic.save(data_paths.MS_PATH + r'\ann_basic.keras')
         ann_basic_pred = ann_basic.predict(x_test, verbose=0)
         ann_basic_mse = ann_basic.evaluate(x_test, y_test, verbose=0)
         #ann_basic_f1 = f1_score(y_test, ann_basic_pred)
@@ -240,8 +285,9 @@ def protocol_md(save=False, plot=True):
 
         # Deep Neural Network
         ann_deep = ann.deep((len(x_train[0]),))
-        ann_deep.fit(x_train, y_train, validation_split=0.1, epochs=90, batch_size=2, verbose=0)
-        ann_deep.save(data_paths.MS_PATH + r'\ann_deep.h5')
+        ann_deep.fit(x_train, y_train, validation_split=ann_validation_split, epochs=ann_epochs[1],
+                      batch_size=ann_batch_size, verbose=0)
+        # ann_deep.save(data_paths.MS_PATH + r'\ann_deep.keras')
         ann_deep_pred = ann_deep.predict(x_test, verbose=0)
         ann_deep_mse = ann_deep.evaluate(x_test, y_test, verbose=0)
         #ann_deep_f1 = f1_score(y_test, ann_deep_pred)
@@ -258,7 +304,7 @@ def protocol_md(save=False, plot=True):
         print('DTR Done.')
 
         # Random Forest Regressor
-        rfr = RandomForestRegressor(n_estimators=64, criterion='squared_error')
+        rfr = RandomForestRegressor(n_estimators=rfr_estimators, criterion='squared_error')
         rfr.fit(x_train, y_train)
         rfr_pred = rfr.predict(x_test)
         rfr_mse = mse(y_test, rfr_pred)
@@ -296,36 +342,6 @@ def protocol_md(save=False, plot=True):
         # Naive-Bayes Regressor
 
         # Results
-        '''
-        
-
-        iter_rank = rank_models(model_results, verbose=True, metric='f1')
-        f1_metrics[iter_rank[0][2]]["rank_score"] += 1
-
-        for model, results in model_results.items():
-            f1_metrics[model]["mse_hist"].append(results["mse"])
-            if i == (iter_length - 1):
-                f1_metrics[model]["max_f1"] = np.max(f1_metrics[model]["hist_f1"])
-                f1_metrics[model]["min_f1"] = np.min(f1_metrics[model]["hist_f1"])
-                f1_metrics[model]["avg_f1"] = stt.mean(f1_metrics[model]["hist_f1"])
-                f1_metrics[model]["stdev_f1"] = stt.stdev(f1_metrics[model]["hist_f1"])
-
-
-    # Final ranking
-    # final_rank_mse = sorted(mse_metrics.items(), key=lambda x: x[1]["rank_score"])
-    # reversed(final_rank_mse)
-    final_rank_f1 = sorted(f1_metrics.items(), key=lambda x: x[1]["rank_score"])
-    reversed(final_rank_f1)
-
-
-    mnames = [model[0] for model in final_rank_f1]
-    mscores = [model[1]["rank_score"] for model in final_rank_f1]
-
-    print('--- Model Ranking ---')
-    for i, model in enumerate(final_rank_f1):
-
-        print(f'{i + 1}. {model[0]}: score={model[1]["score"]}; min_mse={model[1]["min_mse"]}; max_mse={model[1]["max_mse"]}; avg_mse={model[1]["avg_mse"]}; mse_stdev={model[1]["mse_stdev"]}')
-    '''
         mse_metrics.batch_update(iter_res)
 
     mse_metrics.fill_stats()
@@ -333,24 +349,8 @@ def protocol_md(save=False, plot=True):
     print("---- Final Ranking ----")
     mse_metrics.rank_by(save=save, n_iter=iter_length)
 
-    '''# Sets bar plot
-    fig, ax = plt.subplots(figsize=(8, 6))
-    customization.color_plot(fig, ax, 'black', 'black')
 
-    try:
-        ax.bar(mnames, mscores, color='crimson')
-    except:
-        ax.bar(mnames, mscores, color='r')
-    ax.set_xlabel('Model')
-    ax.set_ylabel('Times Ranked as Best')
-    ax.grid(axis='y', color='gainsboro', linestyle='-.')
-    plt.suptitle(f'Model Ranking over {iter_length} iterations')
-    ax.set_title('Metrics: mse')
-    plt.show()
-    '''
-
-
-# Analyzes the data
+# Analyzes the generated data
 def protocol_ex():
     axx = 'Data'
     axy = features[:]
@@ -400,5 +400,16 @@ def protocol_in():
         plt.show()
         plt.close()
 
-protocol_md(save=True, plot=True)
+
+# Optimizes a specific model
+def protocol_op(x, y):
+    dtr_ga = HPO.DTR_GA('mse', 0)
+    dtr_ga.initialize_population(pop_size=400)
+    dtr_ga.run_for(x=x, y=y, n_generations=50, mutation_chance=0.05, mutation_strength=5, debug=True)
+
+# Calls the data generation protocol
+df, x, y = protocol_gd()
+
+# Starts the model train-test iterations
+# protocol_md(save=False, plot=True)
 # protocol_ex()
